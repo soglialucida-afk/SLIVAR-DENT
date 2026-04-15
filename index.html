@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLIVAR-DENT — Zobotehnični laboratorij Postojna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --white: #ffffff; --off-white: #f8f8f6; --light-gray: #f0f0ee;
+    --mid-gray: #c8c8c4; --navy: #0d2035;
+    --blue-accent: #2563a8; --blue-light: #e8f0f8;
+    --text: #2a2a2a; --text-muted: #6a6a6a;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); font-weight: 300; overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 72px;
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo-icon { width: 36px; height: 36px; background: var(--navy); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .nav-logo-icon svg { width: 22px; height: 22px; fill: white; }
+  .nav-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; color: var(--navy); letter-spacing: 0.02em; line-height: 1.1; }
+  .nav-logo-sub { font-size: 0.6rem; font-weight: 300; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); display: block; }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a { text-decoration: none; font-size: 0.8rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--navy); }
+  .nav-cta { background: var(--navy); color: white; padding: 10px 24px; border-radius: 2px; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400; transition: background 0.2s; }
+  .nav-cta:hover { background: var(--blue-accent); }
+
+  /* HERO */
+  .hero { margin-top: 72px; display: grid; grid-template-columns: 1fr 1fr; min-height: 88vh; }
+  .hero-content { display: flex; flex-direction: column; justify-content: center; padding: 80px 64px 80px 80px; background: var(--navy); color: white; }
+  .hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #a0b8d0; margin-bottom: 24px; }
+  .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem, 4vw, 3.8rem); font-weight: 300; line-height: 1.15; color: white; margin-bottom: 28px; }
+  .hero-title em { font-style: italic; color: #a0c4e8; }
+  .hero-desc { font-size: 0.95rem; line-height: 1.8; color: #a0b8d0; max-width: 440px; margin-bottom: 44px; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { background: white; color: var(--navy); padding: 14px 32px; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; transition: all 0.2s; border-radius: 2px; }
+  .btn-primary:hover { background: #a0c4e8; }
+  .btn-outline { border: 1px solid rgba(255,255,255,0.3); color: white; padding: 14px 32px; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 300; transition: all 0.2s; border-radius: 2px; }
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+  .hero-stats { margin-top: 56px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 40px; }
+  .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: white; line-height: 1; }
+  .hero-stat-label { font-size: 0.7rem; color: #a0b8d0; letter-spacing: 0.05em; margin-top: 4px; }
+  .hero-image { position: relative; overflow: hidden; }
+  .hero-image img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+  .hero-image-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to top, rgba(13,32,53,0.7), transparent); }
+  .hero-badge { position: absolute; bottom: 32px; right: 32px; background: rgba(255,255,255,0.95); padding: 16px 20px; border-radius: 4px; text-align: center; }
+  .hero-badge-num { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--blue-accent); line-height: 1; font-weight: 600; }
+  .hero-badge-text { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+  /* INFO BAR */
+  .intro-bar { background: var(--blue-light); padding: 20px 80px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #d0dcea; }
+  .intro-bar-text { font-size: 0.85rem; color: var(--blue-accent); font-weight: 400; }
+  .intro-bar-contact { font-size: 0.8rem; color: var(--navy); display: flex; align-items: center; gap: 24px; }
+  .intro-bar-contact a { color: var(--navy); text-decoration: none; font-weight: 400; }
+
+  /* STORITVE */
+  section, .features { scroll-margin-top: 72px; }
+  .services { padding: 100px 80px; background: var(--white); }
+  .section-header { text-align: center; margin-bottom: 64px; }
+  .section-tag { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue-accent); margin-bottom: 16px; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3vw, 2.8rem); font-weight: 300; color: var(--navy); line-height: 1.2; }
+  .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--mid-gray); }
+  .service-card { background: var(--white); padding: 48px 36px; transition: all 0.3s; cursor: default; }
+  .service-card:hover { background: var(--navy); }
+  .service-card:hover .service-title { color: white; }
+  .service-card:hover .service-desc { color: #a0b8d0; }
+  .service-card:hover .service-icon { background: rgba(255,255,255,0.1); color: #a0c4e8; }
+  .service-card:hover .service-link { color: #a0c4e8; border-color: rgba(255,255,255,0.2); }
+  .service-icon { width: 52px; height: 52px; background: var(--blue-light); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 28px; color: var(--blue-accent); transition: all 0.3s; }
+  .service-icon svg { width: 24px; height: 24px; }
+  .service-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--navy); margin-bottom: 14px; transition: color 0.3s; }
+  .service-desc { font-size: 0.85rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 24px; transition: color 0.3s; }
+  .service-link { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-accent); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--blue-accent); padding-bottom: 2px; transition: all 0.3s; }
+
+  /* FEATURES */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .feature { position: relative; overflow: hidden; height: 520px; }
+  .feature img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+  .feature:hover img { transform: scale(1.04); }
+  .feature-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(13,32,53,0.88) 0%, rgba(13,32,53,0.2) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 36px 32px; }
+  .feature-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: rgba(255,255,255,0.2); line-height: 1; margin-bottom: 12px; }
+  .feature-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: white; margin-bottom: 10px; }
+  .feature-desc { font-size: 0.8rem; color: rgba(255,255,255,0.75); line-height: 1.6; }
+
+  /* O NAS */
+  .about { display: grid; grid-template-columns: 1fr 1fr; min-height: 560px; }
+  .about-content { padding: 80px; display: flex; flex-direction: column; justify-content: center; background: var(--off-white); }
+  .about-visual { background: var(--navy); padding: 80px 64px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+  .about-visual::before { content: ''; position: absolute; top: -80px; right: -80px; width: 360px; height: 360px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.06); }
+  .about-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue-accent); margin-bottom: 20px; }
+  .about-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--navy); line-height: 1.2; margin-bottom: 24px; }
+  .about-text { font-size: 0.9rem; line-height: 1.85; color: var(--text-muted); margin-bottom: 16px; }
+  .about-detail { margin-top: 40px; display: flex; flex-direction: column; gap: 12px; }
+  .about-item { display: flex; align-items: flex-start; gap: 12px; font-size: 0.85rem; color: var(--text-muted); }
+  .about-item-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue-accent); margin-top: 7px; flex-shrink: 0; }
+  .info-block { position: relative; z-index: 1; }
+  .info-block-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: white; margin-bottom: 32px; line-height: 1.3; }
+  .info-item { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 4px; }
+  .info-item:last-child { border-bottom: none; }
+  .info-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #a0b8d0; }
+  .info-value { font-size: 0.9rem; color: white; font-weight: 300; }
+
+  /* RECENZIJA */
+  .review { background: var(--blue-light); padding: 80px; text-align: center; border-top: 1px solid #d0dcea; border-bottom: 1px solid #d0dcea; }
+  .review-stars { color: var(--blue-accent); font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 24px; }
+  .review-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.3rem, 2.5vw, 1.9rem); font-weight: 300; font-style: italic; color: var(--navy); max-width: 760px; margin: 0 auto 24px; line-height: 1.5; }
+  .review-author { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+
+  /* KONTAKT */
+  .contact { background: var(--navy); padding: 100px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-left .section-tag { color: #a0b8d0; }
+  .contact-title { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 300; color: white; line-height: 1.2; margin-bottom: 24px; }
+  .contact-text { font-size: 0.9rem; line-height: 1.8; color: #a0b8d0; margin-bottom: 40px; }
+  .contact-detail { display: flex; flex-direction: column; gap: 20px; }
+  .contact-row { display: flex; align-items: center; gap: 16px; }
+  .contact-icon { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .contact-icon svg { width: 16px; height: 16px; stroke: #a0c4e8; fill: none; }
+  .contact-info-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #a0b8d0; margin-bottom: 2px; }
+  .contact-info-value { font-size: 0.9rem; color: white; font-weight: 300; }
+  .contact-info-value a { color: white; text-decoration: none; }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-field { display: flex; flex-direction: column; gap: 8px; }
+  .form-field label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #a0b8d0; }
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: white; padding: 14px 16px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 300; border-radius: 2px; outline: none; transition: border-color 0.2s;
+  }
+  .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(255,255,255,0.25); }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: rgba(255,255,255,0.4); }
+  .form-field textarea { resize: none; height: 120px; }
+  .form-field select option { background: var(--navy); color: white; }
+  .form-submit {
+    background: white; color: var(--navy); border: none; padding: 16px 32px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 500; cursor: pointer; border-radius: 2px;
+    transition: background 0.2s; align-self: flex-start;
+  }
+  .form-submit:hover { background: #a0c4e8; }
+  .form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .hp-field { display: none !important; }
+  .form-success { display: none; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 32px; text-align: center; }
+  .form-success.show { display: block; }
+  .form-success-icon { font-size: 2rem; margin-bottom: 12px; }
+  .form-success-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: white; margin-bottom: 8px; }
+  .form-success-text { font-size: 0.85rem; color: #a0b8d0; }
+  .form-error { display: none; background: rgba(220,50,50,0.1); border: 1px solid rgba(220,50,50,0.3); border-radius: 4px; padding: 16px; font-size: 0.8rem; color: #ff9999; }
+  .form-error.show { display: block; }
+
+  /* FOOTER */
+  footer { background: #080f1a; padding: 32px 80px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer .footer-logo { font-family: 'Cormorant Garamond', serif; color: rgba(255,255,255,0.5); font-size: 0.95rem; font-weight: 300; }
+  footer .footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.3); letter-spacing: 0.05em; }
+  footer .footer-links { display: flex; gap: 24px; list-style: none; }
+  footer .footer-links a { font-size: 0.72rem; color: rgba(255,255,255,0.35); text-decoration: none; letter-spacing: 0.08em; }
+
+  @media (max-width: 960px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-image { height: 60vw; }
+    .hero-content { padding: 48px 32px; }
+    .services { padding: 64px 24px; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .features { grid-template-columns: 1fr; }
+    .feature { height: 70vw; }
+    .about { grid-template-columns: 1fr; }
+    .about-content { padding: 48px 32px; }
+    .about-visual { padding: 48px 32px; }
+    .contact { grid-template-columns: 1fr; padding: 64px 32px; gap: 48px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { padding: 24px 32px; flex-direction: column; text-align: center; }
+    .intro-bar { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.4 1.1 4.5 2.8 5.9L9 21h6l1.2-6.1C17.9 13.5 19 11.4 19 9c0-4-3-7-7-7z"/></svg>
+    </div>
+    <div>
+      <span class="nav-logo-text">SLIVAR-DENT</span>
+      <span class="nav-logo-sub">Zobotehnični laboratorij · Postojna</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#storitve">Storitve</a></li>
+    <li><a href="#kako">Postopek</a></li>
+    <li><a href="#onas">O nas</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <a href="#kontakt" class="nav-cta">Pošlji povpraševanje</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Zobotehnični laboratorij · Postojna</div>
+    <h1 class="hero-title">Natančnost,<br>ki jo <em>začutite</em><br>v svojem nasmehu.</h1>
+    <p class="hero-desc">Specializiran zobotehnični laboratorij z izkušnjami in najsodobnejšo opremo. Protetične rešitve po meri — za stranke iz celotne Slovenije.</p>
+    <div class="hero-actions">
+      <a href="#kontakt" class="btn-primary">Pošljite povpraševanje</a>
+      <a href="#storitve" class="btn-outline">Naše storitve</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-num">10+</div><div class="hero-stat-label">Let izkušenj</div></div>
+      <div><div class="hero-stat-num">SLO</div><div class="hero-stat-label">Celotna Slovenija</div></div>
+      <div><div class="hero-stat-num">5★</div><div class="hero-stat-label">Ocena strank</div></div>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="images/hero.png" alt="Zadovoljne stranke SLIVAR-DENT">
+    <div class="hero-image-overlay"></div>
+    <div class="hero-badge">
+      <div class="hero-badge-num">✓</div>
+      <div class="hero-badge-text">Dovoljenje JAZMP</div>
+    </div>
+  </div>
+</section>
+
+<div class="intro-bar">
+  <span class="intro-bar-text">🦷 Delovni čas po dogovoru — prilagajamo se vašim potrebam</span>
+  <div class="intro-bar-contact">
+    <a href="mailto:uros@slivar-dent.si">✉ uros@slivar-dent.si</a>
+    <a href="#kontakt">→ Pišite nam</a>
+  </div>
+</div>
+
+<section class="services" id="storitve">
+  <div class="section-header">
+    <div class="section-tag">Naše storitve</div>
+    <h2 class="section-title">S čim vam lahko pomagamo?</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C9 2 7 4.5 7 7.5c0 1.5.5 2.8 1.3 3.8L9.5 19h5l1.2-7.7c.8-1 1.3-2.3 1.3-3.8C17 4.5 15 2 12 2z"/><path d="M9 7h6M10 10h4"/></svg></div>
+      <div class="service-title">Prevleke & Mostički</div>
+      <div class="service-desc">Keramične in kovinsko-porcelanske prevleke ter mostički, izdelani z natančnostjo in pozornostjo do estetskih detajlov.</div>
+      <a href="#kontakt" class="service-link">Povpraševanje →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="13" rx="7" ry="5"/><path d="M5 13V9a7 4 0 0 1 14 0v4"/><path d="M8 11s1 2 4 2 4-2 4-2"/></svg></div>
+      <div class="service-title">Proteze</div>
+      <div class="service-desc">Snemne in kombinirane proteze po meri — funkcijske, estetske in udobne. Iz najboljših materialov za dolgo obstojnost.</div>
+      <a href="#kontakt" class="service-link">Povpraševanje →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 9s.5-2 3-2 3 2 3 2"/><path d="M9 15s.5 2 3 2 3-2 3-2"/><path d="M9 12h6"/></svg></div>
+      <div class="service-title">Polnila</div>
+      <div class="service-desc">Kompozitna in keramična inlay/onlay polnila, oblikovana za naraven videz in dolgoročno funkcionalnost.</div>
+      <a href="#kontakt" class="service-link">Povpraševanje →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="8" width="16" height="8" rx="4"/><path d="M4 12h16"/><circle cx="8" cy="12" r="1" fill="currentColor"/><circle cx="16" cy="12" r="1" fill="currentColor"/></svg></div>
+      <div class="service-title">Opornice</div>
+      <div class="service-desc">Okluzijske opornice in zobne šine za zaščito pred bruksizmom — precizno prilagojene anatomiji pacienta.</div>
+      <a href="#kontakt" class="service-link">Povpraševanje →</a>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="kako">
+  <div class="feature">
+    <img src="images/technician.png" alt="Zobotehnik pri pregledu">
+    <div class="feature-overlay">
+      <div class="feature-num">01</div>
+      <div class="feature-title">Strokovna izdelava</div>
+      <div class="feature-desc">Vsak protetični izdelek nastane z roko izkušenega strokovnjaka in najsodobnejšo opremo.</div>
+    </div>
+  </div>
+  <div class="feature">
+    <img src="images/prosthesis.png" alt="Precizno izdelana proteza">
+    <div class="feature-overlay">
+      <div class="feature-num">02</div>
+      <div class="feature-title">Kakovostni materiali</div>
+      <div class="feature-desc">Izključno certificirani biokompatibilni materiali za dolgoročno varnost in estetiko.</div>
+    </div>
+  </div>
+  <div class="feature">
+    <img src="images/dentist.png" alt="Zobozdravnica pri delu">
+    <div class="feature-overlay">
+      <div class="feature-num">03</div>
+      <div class="feature-title">Partner ordinacij</div>
+      <div class="feature-desc">Dolgoletni zaupanja vredni partner zobozdravstvenim ordinacijam po vsej Sloveniji.</div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="onas">
+  <div class="about-content">
+    <div class="about-label">O nas</div>
+    <h2 class="about-title">Zobotehnika z<br>dušo in izkušnjo</h2>
+    <p class="about-text">SLIVAR-DENT je zobotehnični laboratorij z dolgoletno tradicijo v Postojni. Ustanovil ga je Uroš Slivar, ki je področje zobotehnike začel obvladovati že leta 2011.</p>
+    <p class="about-text">Zaupajo nam ordinacije in zobozdravniki iz celotne Slovenije. Kljub vrhunski kakovosti naše cene ostajajo dostopne in konkurenčne.</p>
+    <div class="about-detail">
+      <div class="about-item"><div class="about-item-dot"></div><span>Stranke iz celotne Slovenije</span></div>
+      <div class="about-item"><div class="about-item-dot"></div><span>Najsodobnejša oprema in redno izobraževanje</span></div>
+      <div class="about-item"><div class="about-item-dot"></div><span>Dovoljenje za zdravstveno dejavnost — JAZMP</span></div>
+      <div class="about-item"><div class="about-item-dot"></div><span>Delovni čas prilagojen potrebam partnerjev</span></div>
+    </div>
+  </div>
+  <div class="about-visual">
+    <div class="info-block">
+      <div class="info-block-title">Podatki laboratorija</div>
+      <div class="info-item"><div class="info-label">Vodja</div><div class="info-value">Uroš Slivar</div></div>
+      <div class="info-item"><div class="info-label">Naslov</div><div class="info-value">Kazarje 10, 6230 Postojna</div></div>
+      <div class="info-item"><div class="info-label">E-pošta</div><div class="info-value"><a href="mailto:uros@slivar-dent.si" style="color:white;text-decoration:none;">uros@slivar-dent.si</a></div></div>
+      <div class="info-item"><div class="info-label">Delovni čas</div><div class="info-value">Po dogovoru</div></div>
+      <div class="info-item"><div class="info-label">DŠ / MŠ</div><div class="info-value">75305682 / 9911154000</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="review">
+  <div class="review-stars">★★★★★</div>
+  <blockquote class="review-text">"Top izkušnja od naročanja do same obravnave. Na termin sem prišla hitro, brez kompliciranja. Bili so zelo nežni in natančni. Ordinacija je čista in moderna. Priporočam naprej!"</blockquote>
+  <div class="review-author">Verified stranka · 5/5</div>
+</div>
+
+<section class="contact" id="kontakt">
+  <div class="contact-left">
+    <div class="section-tag">Kontakt</div>
+    <h2 class="contact-title">Stopite<br>v stik z nami</h2>
+    <p class="contact-text">Za povpraševanje, informacije o storitvah ali dogovor o sodelovanju nam pišite. Odgovorimo čim prej.</p>
+    <div class="contact-detail">
+      <div class="contact-row">
+        <div class="contact-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div>
+          <div class="contact-info-label">E-pošta</div>
+          <div class="contact-info-value"><a href="mailto:uros@slivar-dent.si">uros@slivar-dent.si</a></div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div>
+          <div class="contact-info-label">Naslov</div>
+          <div class="contact-info-value">Kazarje 10, 6230 Postojna</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <!--
+    ================================================
+    NAVODILO ZA FORMSPREE:
+    1. Pojdi na https://formspree.io
+    2. Registriraj se z uros@slivar-dent.si
+    3. Klikni + New Form → kopiraj tvoj ID
+    4. Zamenjaj TVOJ_FORMSPREE_ID spodaj s tvojim ID-jem
+    ================================================
+    -->
+    <form class="contact-form" id="contactForm"
+      action="https://formspree.io/f/TVOJ_FORMSPREE_ID"
+      method="POST">
+      <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off">
+      <input type="hidden" name="_subject" value="Novo povpraševanje — SLIVAR-DENT">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="ime">Ime in priimek *</label>
+          <input type="text" id="ime" name="ime" placeholder="Vaše ime" required>
+        </div>
+        <div class="form-field">
+          <label for="email">E-pošta *</label>
+          <input type="email" id="email" name="email" placeholder="vas@email.si" required>
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="telefon">Telefonska številka</label>
+        <input type="tel" id="telefon" name="telefon" placeholder="+386 ...">
+      </div>
+      <div class="form-field">
+        <label for="storitev">Storitev *</label>
+        <select id="storitev" name="storitev" required>
+          <option value="" disabled selected>Izberite storitev</option>
+          <option value="Prevleke in mostički">Prevleke in mostički</option>
+          <option value="Proteze">Proteze</option>
+          <option value="Polnila">Polnila</option>
+          <option value="Opornice">Opornice</option>
+          <option value="Drugo">Drugo</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="sporocilo">Sporočilo *</label>
+        <textarea id="sporocilo" name="sporocilo" placeholder="Opišite vaše povpraševanje..." required></textarea>
+      </div>
+      <div class="form-error" id="formError">⚠️ Prišlo je do napake. Pišite nam direktno na uros@slivar-dent.si</div>
+      <button type="submit" class="form-submit" id="submitBtn">Pošlji povpraševanje →</button>
+    </form>
+    <div class="form-success" id="formSuccess">
+      <div class="form-success-icon">✓</div>
+      <div class="form-success-title">Hvala za vaše povpraševanje!</div>
+      <div class="form-success-text">Uroš se vam bo oglasil čim prej na vaš email naslov.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">SLIVAR-DENT — Zobotehnični laboratorij</div>
+  <ul class="footer-links">
+    <li><a href="#storitve">Storitve</a></li>
+    <li><a href="#onas">O nas</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 SLIVAR-DENT d.o.o. · DŠ 75305682 · Kazarje 10, Postojna</div>
+</footer>
+
+<script>
+const form = document.getElementById('contactForm');
+const btn = document.getElementById('submitBtn');
+const success = document.getElementById('formSuccess');
+const error = document.getElementById('formError');
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (form.querySelector('[name="_gotcha"]').value) return;
+  btn.disabled = true;
+  btn.textContent = 'Pošiljam...';
+  error.classList.remove('show');
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (response.ok) {
+      form.style.display = 'none';
+      success.classList.add('show');
+    } else { throw new Error(); }
+  } catch {
+    error.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Pošlji povpraševanje →';
+  }
+});
+</script>
+</body>
+</html>
